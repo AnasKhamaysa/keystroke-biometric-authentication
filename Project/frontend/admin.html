@@ -1,0 +1,427 @@
+<!-- Day 17 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Audit Logs</title>
+
+    <style>
+
+        /* ==================== Page Layout ==================== */
+
+        /* Main page styling with a beige and silver visual theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4F4F0;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+
+
+        /* ==================== Dashboard Container ==================== */
+
+        /* Central card that contains the security audit log table */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(192, 192, 192, 0.4);
+            padding: 20px 30px;
+            border: 1px solid #e8e8e8;
+        }
+
+
+        /* ==================== Heading ==================== */
+
+        /* Dashboard title with a silver separator line */
+        h2 {
+            color: #4a4a4a;
+            border-bottom: 2px solid #C0C0C0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+
+        /* ==================== Audit Log Table ==================== */
+
+        /* Main table used to display authentication audit records */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        /* Shared styling for table headers and data cells */
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Styling for table header cells */
+        th {
+            background-color: #f7f7f7;
+            color: #555;
+            font-weight: 600;
+        }
+
+        /* Highlight table rows when the user hovers over them */
+        tr:hover {
+            background-color: #fafafa;
+        }
+
+
+        /* ==================== Authentication Status ==================== */
+
+        /* Visual style for successful authentication attempts */
+        .status-accepted {
+            color: #2e7d32;
+            font-weight: bold;
+            background-color: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Visual style for rejected authentication attempts */
+        .status-rejected {
+            color: #c62828;
+            font-weight: bold;
+            background-color: #ffebee;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Visual style for unexpected or unknown authentication states */
+        .status-unknown {
+            color: #6d4c41;
+            font-weight: bold;
+            background-color: #efebe9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+
+        /* ==================== System Messages ==================== */
+
+        /* Styling used for loading, empty, and error messages */
+        .message-cell {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #c62828;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================== Security Audit Dashboard ==================== -->
+
+    <div class="container">
+
+        <h2>📊 Security Audit Logs</h2>
+
+        <!-- Table displaying recorded authentication attempts -->
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th>Anomaly Score</th>
+                </tr>
+            </thead>
+
+            <!-- Audit log records are inserted dynamically using JavaScript -->
+            <tbody id="logs-table-body">
+                <tr>
+                    <td colspan="5" class="message-cell">
+                        Loading audit logs...
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <script>
+
+        /* ==================== Helper Functions ==================== */
+
+        /**
+         * Determine the CSS class used to display an authentication status.
+         *
+         * @param {string} status - Authentication result returned by the server.
+         * @returns {string} CSS class corresponding to the status.
+         */
+        function getStatusClass(status) {
+
+    if (
+        status === "Accepted" ||
+        status === "USER_ENROLLED"
+    ) {
+        return "status-accepted";
+    }
+
+
+    if (
+        status === "Rejected" ||
+        status === "INVALID_CREDENTIALS" ||
+        status === "BOT_SUSPECTED" ||
+        status === "BIOMETRIC_STRUCTURE_MISMATCH" ||
+        status === "INVALID_BIOMETRIC_DATA"
+    ) {
+        return "status-rejected";
+    }
+
+
+    return "status-unknown";
+}
+
+
+        /**
+         * Convert the timestamp received from the backend into
+         * a readable local date and time.
+         *
+         * @param {string} timestamp - Timestamp returned by the server.
+         * @returns {string} Formatted timestamp or a fallback value.
+         */
+        function formatTimestamp(timestamp) {
+
+            if (!timestamp) {
+                return 'N/A';
+            }
+
+            const date = new Date(timestamp);
+
+            if (isNaN(date.getTime())) {
+                return 'Invalid timestamp';
+            }
+
+            return date.toLocaleString();
+        }
+
+
+        /**
+         * Format the anomaly score to four decimal places.
+         *
+         * @param {*} score - Anomaly score returned by the backend.
+         * @returns {string} Formatted score or a fallback value.
+         */
+        function formatAnomalyScore(score) {
+
+            const numericScore = Number(score);
+
+            if (!Number.isFinite(numericScore)) {
+                return 'N/A';
+            }
+
+            return numericScore.toFixed(4);
+        }
+
+
+        /**
+         * Create a standard table cell and safely insert plain text.
+         *
+         * Using textContent prevents HTML received from the backend
+         * from being interpreted as executable HTML or JavaScript.
+         *
+         * @param {*} value - Value to display inside the table cell.
+         * @returns {HTMLTableCellElement} Newly created table cell.
+         */
+        function createTextCell(value) {
+
+            const cell = document.createElement('td');
+
+            cell.textContent =
+                value === null || value === undefined
+                    ? 'N/A'
+                    : String(value);
+
+            return cell;
+        }
+
+
+        /* ==================== Audit Log Retrieval ==================== */
+
+        /**
+         * Fetch authentication audit logs from the backend API
+         * and display them safely inside the dashboard table.
+         */
+        async function fetchLogs() {
+
+            const tableBody = document.getElementById('logs-table-body');
+
+            try {
+
+                /* Clear any existing records before inserting new data */
+                tableBody.innerHTML = '';
+
+
+                /* Request audit log data from the backend server */
+                const response = await fetch(
+                    'http://localhost:8000/admin/logs'
+                );
+
+
+                /* Stop processing if the server returns an HTTP error */
+                if (!response.ok) {
+                    throw new Error(
+                        `Server returned HTTP ${response.status}`
+                    );
+                }
+
+
+                /* Convert the server response into JSON */
+                const data = await response.json();
+
+
+                /* Verify that the expected data structure exists */
+                if (
+                    data &&
+                    Array.isArray(data.data) &&
+                    data.data.length > 0
+                ) {
+
+                    data.data.forEach(log => {
+
+                        /* Create a new row for each authentication record */
+                        const row = document.createElement('tr');
+
+
+                        /* ==================== ID ==================== */
+
+                        row.appendChild(
+                            createTextCell(log.id)
+                        );
+
+
+                        /* ==================== Timestamp ==================== */
+
+                        row.appendChild(
+                            createTextCell(
+                                formatTimestamp(log.timestamp)
+                            )
+                        );
+
+
+                        /* ==================== Username ==================== */
+
+                        /*
+                         * textContent is used instead of innerHTML
+                         * to prevent malicious usernames from being
+                         * interpreted as HTML or JavaScript.
+                         */
+                        row.appendChild(
+                            createTextCell(log.username)
+                        );
+
+
+                        /* ==================== Authentication Status ==================== */
+
+                        const statusCell = document.createElement('td');
+
+                        const statusSpan = document.createElement('span');
+
+                        const status =
+                            log.attempt_status ||
+                            'Unknown';
+
+                        statusSpan.className =
+                            getStatusClass(status);
+
+                        statusSpan.textContent = status;
+
+                        statusCell.appendChild(statusSpan);
+
+                        row.appendChild(statusCell);
+
+
+                        /* ==================== Anomaly Score ==================== */
+
+                        row.appendChild(
+                            createTextCell(
+                                formatAnomalyScore(
+                                    log.anomaly_score
+                                )
+                            )
+                        );
+
+
+                        /* Add the completed record to the table */
+                        tableBody.appendChild(row);
+
+                    });
+
+                } else {
+
+                    /* Display a message when no audit records exist */
+                    const row = document.createElement('tr');
+
+                    const cell = document.createElement('td');
+
+                    cell.colSpan = 5;
+                    cell.className = 'message-cell';
+                    cell.textContent = 'No logs available.';
+
+                    row.appendChild(cell);
+
+                    tableBody.appendChild(row);
+                }
+
+            } catch (error) {
+
+                /* Log detailed information for debugging */
+                console.error(
+                    'Error fetching audit logs:',
+                    error
+                );
+
+
+                /* Display a user-friendly error inside the dashboard */
+                tableBody.innerHTML = '';
+
+                const row = document.createElement('tr');
+
+                const cell = document.createElement('td');
+
+                cell.colSpan = 5;
+                cell.className =
+                    'message-cell error-message';
+
+                cell.textContent =
+                    'Unable to load audit logs. Please check the server connection.';
+
+                row.appendChild(cell);
+
+                tableBody.appendChild(row);
+            }
+        }
+
+
+        /* ==================== Page Initialization ==================== */
+
+        /* Fetch and display audit logs after the page finishes loading */
+        window.onload = fetchLogs;
+
+    </script>
+
+</body>
+
+</html>

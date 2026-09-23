@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Keystroke Biometric Authentication
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <div class="auth-container">
+
+
+        <!-- ================= Login ================= -->
+
+        <div
+            class="form-section"
+            id="login-section"
+        >
+
+            <h2>
+                Secure Login
+            </h2>
+
+            <p class="subtitle">
+                Password authentication enhanced with
+                keystroke biometrics.
+            </p>
+
+
+            <form id="login-form">
+
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        id="login-username"
+                        placeholder="Username"
+                        required
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div
+                    class="input-group password-group"
+                >
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="Password"
+                        required
+                        autocomplete="off"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('login-password')"
+                        aria-label="Toggle password visibility"
+                    >
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+
+                            <path
+                                d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"
+                            ></path>
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="3"
+                            ></circle>
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Authenticate
+                </button>
+
+            </form>
+
+
+            <p class="toggle-text">
+
+                New user?
+
+                <span
+                    class="toggle-link"
+                    onclick="toggleView()"
+                >
+                    Enroll here
+                </span>
+
+            </p>
+
+        </div>
+
+
+        <!-- ================= Enrollment ================= -->
+
+        <div
+            class="form-section hidden"
+            id="enroll-section"
+        >
+
+            <h2>
+                System Enrollment
+            </h2>
+
+
+            <p class="subtitle">
+                Type the same password 10 times to build
+                your personal biometric profile.
+            </p>
+
+
+            <form id="enroll-form">
+
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        id="enroll-username"
+                        placeholder="Choose a Username"
+                        required
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div
+                    class="input-group password-group"
+                >
+
+                    <input
+                        type="password"
+                        id="enroll-password"
+                        placeholder="Type Password"
+                        required
+                        autocomplete="off"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('enroll-password')"
+                        aria-label="Toggle password visibility"
+                    >
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+
+                            <path
+                                d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"
+                            ></path>
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="3"
+                            ></circle>
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+
+                <div class="attempt-tracker">
+
+                    Attempts:
+
+                    <span id="attempt-count">
+                        0
+                    </span>
+
+                    / 10
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Submit Attempt
+                </button>
+
+            </form>
+
+
+            <p class="toggle-text">
+
+                Already enrolled?
+
+                <span
+                    class="toggle-link"
+                    onclick="toggleView()"
+                >
+                    Login here
+                </span>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Utilities ================= -->
+
+    <script>
+
+        function toggleView() {
+
+            document
+                .getElementById(
+                    "login-section"
+                )
+                .classList
+                .toggle(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "enroll-section"
+                )
+                .classList
+                .toggle(
+                    "hidden"
+                );
+        }
+
+
+        function togglePassword(
+            inputId
+        ) {
+
+            const input =
+                document.getElementById(
+                    inputId
+                );
+
+
+            input.type =
+                input.type ===
+                    "password"
+                    ?
+                    "text"
+                    :
+                    "password";
+        }
+
+    </script>
+
+
+    <script src="app.js"></script>
+
+
+</body>
+
+</html>

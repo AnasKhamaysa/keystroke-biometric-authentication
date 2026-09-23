@@ -1,0 +1,172 @@
+/* Day 2 */
+
+
+/* ==================== Global Styles ==================== */
+
+/* Reset default spacing and apply a consistent box model and font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Center the authentication interface on a dark background */
+body {
+    background-color: #0f172a; /* Dark background for a cybersecurity-themed interface */
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+/* ================= Authentication Container ================= */
+
+/* Main card that contains the login and enrollment forms */
+.auth-container {
+    background-color: #1e293b;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    border-top: 4px solid #3b82f6; /* Blue accent used to emphasize the security theme */
+}
+
+
+/* ==================== Typography ==================== */
+
+/* Main form headings */
+h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #f8fafc;
+}
+
+/* Supporting text displayed below the heading */
+.subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 25px;
+}
+
+
+/* ==================== Form Elements ==================== */
+
+/* Wrapper for individual form inputs */
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Allows the password visibility button to be positioned inside the input field */
+.password-group {
+    position: relative;
+}
+
+/* General styling for username and password input fields */
+input {
+    width: 100%;
+    padding: 12px 45px 12px 15px; /* Extra right padding prevents text from overlapping the visibility icon */
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    color: #f8fafc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Highlight the active input field */
+input:focus {
+    border-color: #3b82f6;
+}
+
+
+/* ================= Password Visibility Toggle ================= */
+
+/* Positions the eye icon inside the password input */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+/* Brighten the visibility icon when the user hovers over it */
+.toggle-password:hover {
+    color: #f8fafc;
+}
+
+
+/* ==================== Main Button ==================== */
+
+/* Primary action button used for authentication and enrollment */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Darken the button slightly when hovered */
+.btn:hover {
+    background-color: #2563eb;
+}
+
+
+/* ==================== Utility Classes ==================== */
+
+/* Hide elements that are not currently active */
+.hidden {
+    display: none;
+}
+
+/* Text used for switching between login and enrollment views */
+.toggle-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* Interactive link used to switch between authentication views */
+.toggle-link {
+    color: #3b82f6;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Add a visual indication when hovering over the view-switching link */
+.toggle-link:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= Enrollment Progress ================= */
+
+/* Displays the current number of collected enrollment attempts */
+.attempt-tracker {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #10b981; /* Green color indicates enrollment progress */
+    font-weight: bold;
+}

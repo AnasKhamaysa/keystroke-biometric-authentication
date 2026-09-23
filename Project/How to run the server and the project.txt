@@ -1,0 +1,144 @@
+============================================================
+Keystroke Biometric Authentication System
+============================================================
+
+
+============================================================
+1. Install Python Libraries
+============================================================
+
+pip install fastapi uvicorn bcrypt pandas scikit-learn joblib
+
+
+============================================================
+2. Start Backend Server
+============================================================
+
+Open a terminal inside the project folder.
+
+Enter the backend directory:
+
+cd backend
+
+
+Run:
+
+python -m uvicorn main:app --reload
+
+
+Alternative commands:
+
+uvicorn main:app --reload
+
+or:
+
+py -m uvicorn main:app --reload
+
+
+Backend URL:
+
+http://127.0.0.1:8000
+
+
+FastAPI Documentation:
+
+http://127.0.0.1:8000/docs
+
+
+============================================================
+3. Start Frontend Server
+============================================================
+
+Open a SECOND terminal.
+
+Enter the frontend directory:
+
+cd frontend
+
+
+Run:
+
+python -m http.server 5500
+
+
+Alternative:
+
+py -m http.server 5500
+
+
+Then open:
+
+http://127.0.0.1:5500
+
+
+============================================================
+4. Enrollment Process
+============================================================
+
+1. Open the frontend.
+2. Select "Enroll here".
+3. Enter a username.
+4. Type the same password 10 times.
+5. The backend automatically:
+   - stores the user,
+   - hashes the password using bcrypt,
+   - extracts keystroke biometric features,
+   - trains a StandardScaler,
+   - trains an Isolation Forest model,
+   - creates a unique biometric model for the user.
+
+
+============================================================
+5. Login Process
+============================================================
+
+The system verifies:
+
+1. Username and password.
+2. Keystroke biometric typing pattern.
+
+Access is granted only when both authentication layers succeed.
+
+
+============================================================
+6. Admin Dashboard
+============================================================
+
+Open:
+
+http://127.0.0.1:5500/admin.html
+
+
+The dashboard displays authentication audit logs.
+
+
+============================================================
+7. Model Storage
+============================================================
+
+A unique biometric model is automatically created for every
+registered user inside:
+
+backend/models/
+
+
+============================================================
+8. Jupyter Notebook
+============================================================
+
+The Jupyter notebook is no longer required to train users.
+
+It can be used later for:
+
+- Model evaluation
+- FAR calculation
+- FRR calculation
+- EER calculation
+- Statistical analysis
+- Visualization
+- Research experiments
+
+
+To start Jupyter:
+
+python -m jupyter notebook
